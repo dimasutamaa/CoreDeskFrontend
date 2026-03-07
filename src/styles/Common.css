@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600&display=swap');
+
+body {
+    background: #f8f8f6; 
+    font-family: 'Syne', sans-serif;
+}
+
+.card {
+    border: 1px solid #e2e2de; 
+    border-radius: 2px;
+}
+
+.form-control {
+    border-radius: 2px;
+    border-color: #e2e2de;
+    font-size: 14px;
+}
+
+.form-control:focus {
+    border-color: #111;
+    box-shadow: none;
+}
+
+.btn-dark {
+    border-radius: 2px;
+    font-size: 13px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.wordmark {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -.03em;
+    color: #111;
+}
+
+.dot { 
+    color: #d04f2a; 
+}
