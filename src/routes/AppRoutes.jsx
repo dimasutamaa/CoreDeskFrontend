@@ -4,6 +4,7 @@ import UserDashboard from "../pages/user/UserDashboard";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import DashboardLayout from "../pages/layout/DashboardLayout";
 import Login from "../pages/Login";
+import CreateTicket from "../pages/user/CreateTicket";
 
 export default function AppRoutes() {
     const { user } = useAuth();
@@ -24,6 +25,7 @@ export default function AppRoutes() {
                     <DashboardLayout role="USER" pageTitle="Overview" />
                 }>
                 <Route index element={<UserDashboard />} />
+                <Route path="tickets/create" element={<CreateTicket />} />
             </Route>
 
             {/* Admin routes */}

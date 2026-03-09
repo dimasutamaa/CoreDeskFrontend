@@ -6,6 +6,7 @@ import "../../styles/Common.css";
 
 const USER_NAV = [
     { label: "Overview",  to: "/dashboard" },
+    { label: "Create Ticket",  to: "/dashboard/tickets/create" },
 ];
 
 const ADMIN_NAV = [
