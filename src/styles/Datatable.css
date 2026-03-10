@@ -1,0 +1,38 @@
+:root {
+    --primary-color: #111;
+    --secondary-color: #F0EFEF;
+}
+
+/* TABLE */
+table {
+    border-collapse: collapse;
+}
+
+#ticketTable thead th {
+    background-color: var(--secondary-color) !important;
+}
+
+tr {
+    height: 50px;
+}
+
+td {
+    border-bottom: 1px solid var(--primary-color);
+}
+
+/* PAGINATION */
+.page-item.active .page-link {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+.page-link {
+    color: #6c757d !important;
+    border: 1px solid #dee2e6 !important;
+}
+
+.page-link:hover {
+    background-color: var(--secondary-color) !important;
+    color: var(--primary-color) !important;
+}
