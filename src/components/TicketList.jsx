@@ -5,21 +5,11 @@ import "../styles/Datatable.css";
 import api from '../api/api';
 import Swal from 'sweetalert2';
 import TicketFilter from './TicketFilter';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { PRIORITY_STYLES, STATUS_STYLES } from '../utils/CommonUtil';
 
 DataTable.use(DT);
-
-const STATUS_STYLES = {
-    OPEN:        { label: "Open",        color: "#2d7a4f", bg: "#edf7f1", border: "#b6dfc8" },
-    IN_PROGRESS: { label: "In Progress", color: "#7a5c2d", bg: "#fdf6ed", border: "#dfd0b6" },
-    RESOLVED:    { label: "Resolved",    color: "#2d4f7a", bg: "#edf2f7", border: "#b6c8df" },
-    CLOSED:      { label: "Closed",      color: "#8a8880", bg: "#f8f8f6", border: "#e2e2de" },
-};
-
-const PRIORITY_STYLES = {
-    LOW:    { label: "Low",    color: "#8a8880", bg: "#f8f8f6", border: "#e2e2de" },
-    MEDIUM: { label: "Medium", color: "#7a5c2d", bg: "#fdf6ed", border: "#dfd0b6" },
-    HIGH:   { label: "High",   color: "#d04f2a", bg: "#fdf0ed", border: "#f0c4b6" },
-};
 
 const badge = (styles) => `
     <span style="
@@ -70,9 +60,11 @@ const buildParams = (filters) => {
 };
 
 export default function TicketList() {
+    const { user } = useAuth();
     const [tickets, setTickets] = useState(null);
     const [filters, setFilters] = useState(EMPTY_FILTERS);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const fetchTickets = async (activeFilters) => {
         setLoading(true);
@@ -91,6 +83,39 @@ export default function TicketList() {
             console.error("Error fetching ticket data:", error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleProcess = async (ticketId) => {
+        try {
+            const userRole = user.role;
+            const response = await api.get(`/tickets/${ticketId}/checkUser?role=` + userRole);
+            
+            const isValid = response.data.data;
+            if (isValid) {
+                const basePath = userRole === "ADMIN"
+                    ? "/admin/tickets"
+                    : "/dashboard/tickets";
+
+                navigate(`${basePath}/${ticketId}`);
+            } else {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Cannot process ticket",
+                    text: "You have unassigned ticket that are still in progress.",
+                    confirmButtonColor: "#111",
+                    confirmButtonText: "OK",
+                })
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Something went wrong",
+                text: "Failed to load tickets. Please try again later.",
+                confirmButtonColor: "#111",
+                confirmButtonText: "OK",
+            });
+            console.error("Error fetching ticket data:", error);
         }
     };
 
@@ -178,21 +203,32 @@ export default function TicketList() {
             data: "id",
             className: "text-center",
             sortable: false,
-            render: (data) => `
-                <a href="/dashboard/tickets/${data}" 
-                    style="
-                        border-radius: 3px; 
-                        font-size: 13px; 
-                        letter-spacing: .06em; 
-                        text-transform: uppercase; 
-                        color: #f8f8f6;
-                        background: #111; 
-                        border: 1px solid #111; 
-                        padding: 6px 12px;
-                        text-decoration: none;">
-                    Process
-                </a>
-            `
+            createdCell: (td, cellData) => {
+                const button = document.createElement("button");
+                button.className = "btn btn-dark btn-sm process-btn";
+                button.textContent = "Process";
+
+                button.onclick = async () => {
+                    const buttons = document.querySelectorAll(".process-btn");
+
+                    buttons.forEach(btn => btn.disabled = true);
+
+                    button.innerHTML = `
+                        <span class="spinner-border spinner-border-sm align-middle"></span>
+                        Process
+                    `;
+
+                    await handleProcess(cellData);
+
+                    buttons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.innerHTML = "Process";
+                    });
+                }
+
+                td.innerHTML = "";
+                td.appendChild(button);
+            }
         }
     ];
 

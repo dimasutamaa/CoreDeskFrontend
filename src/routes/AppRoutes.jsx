@@ -6,6 +6,7 @@ import DashboardLayout from "../pages/layout/DashboardLayout";
 import Login from "../pages/Login";
 import CreateTicket from "../pages/user/CreateTicket";
 import TicketList from "../components/TicketList";
+import TicketDetail from "../components/TicketDetail";
 
 export default function AppRoutes() {
     const { user } = useAuth();
@@ -27,6 +28,7 @@ export default function AppRoutes() {
                 }>
                 <Route index element={<UserDashboard />} />
                 <Route path="tickets" element={<TicketList />} />
+                <Route path="tickets/:id" element={<TicketDetail />} />
                 <Route path="tickets/create" element={<CreateTicket />} />
             </Route>
 
@@ -40,6 +42,7 @@ export default function AppRoutes() {
                 }>
                 <Route index element={<AdminDashboard />} />
                 <Route path="tickets" element={<TicketList />} />
+                <Route path="tickets/:id" element={<TicketDetail />} />
             </Route>
 
             {/* Fallback */}
