@@ -1,28 +1,17 @@
-import { useEffect, useState } from "react";
-import api from "../../api/api";
-import Swal from "sweetalert2";
+import { getTicketRecap } from "../../api/getTicketRecap";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function UserDashboard() {
-    const [recap, setRecap] = useState(null);
-
-    useEffect(() => {
-        api.get("/users/recap")
-            .then(response => setRecap(response.data.data))
-            .catch(error => {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "Failed to fetch recap data. Please try again later.",
-                    confirmButtonColor: "#111",
-                });
-                console.error("Error fetching recap data:", error);
-            });
-    }, []);
+    const { recap, loading } = getTicketRecap("USER");
 
     const ticketRecap = [
         { label: "My Tickets", value: recap?.open || "0" },
         { label: "Closed Tickets", value: recap?.closed || "0" },
     ];
+
+    if (loading) {
+        return <LoadingSpinner /> 
+    }
 
     return (
         <div>

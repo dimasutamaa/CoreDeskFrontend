@@ -8,6 +8,7 @@ import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-bs5';
 import "../styles/Datatable.css";
 import { createRoot } from "react-dom/client";
+import LoadingSpinner from "./LoadingSpinner";
 
 DataTable.use(DT);
 
@@ -219,11 +220,7 @@ export default function TicketDetail() {
     ];
 
     if (!ticket) {
-        return (
-            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: 300 }}>
-                <div className="spinner-border" style={{ color: "#111" }}></div>
-            </div>
-        );
+        return <LoadingSpinner />
     }
 
     return (
