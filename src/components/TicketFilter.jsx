@@ -161,8 +161,8 @@ export default function TicketFilter({ filters, onChange, onReset }) {
                         <div className="col-12 col-md-6 col-lg-4">
                             <label style={labelStyle}>Assigned to</label>
                             <select className="form-control" value={draft.assignedTo}
-                                onChange={e => handleDraftChange("assignedTo", e.target.value)}>
-                                <option value="">All agents</option>
+                                onChange={e => handleDraftChange("assignedTo", e.target.value)} disabled={user.role === "AGENT"}>
+                                <option value="">{user.role === "AGENT" ? user.username : "All agents"}</option>
                                 {Object.entries(filterOptions.agents).map(([id, name]) => (
                                     <option key={id} value={id}>
                                         {name}

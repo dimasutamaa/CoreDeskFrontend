@@ -17,6 +17,11 @@ const ADMIN_NAV = [
     { label: "Tickets",  to: "/admin/tickets" },
 ];
 
+const AGENT_NAV = [
+    { label: "Overview",  to: "/agent" },
+    { label: "Tickets",  to: "/agent/tickets" },
+];
+
 // Sidebar
 function Sidebar({ nav, collapsed, onCollapse }) {
     const { logout } = useAuth();
@@ -166,7 +171,7 @@ function Header({ title }) {
 // Layout
 export default function DashboardLayout({ role = "USER", pageTitle = "Overview" }) {
     const [collapsed, setCollapsed] = useState(false);
-    const nav = role === "ADMIN" ? ADMIN_NAV : USER_NAV;
+    const nav = role === "ADMIN" ? ADMIN_NAV : role === "AGENT" ? AGENT_NAV : USER_NAV;
 
     return (
         <div style={{ display: "flex", minHeight: "100vh", background: "#f8f8f6" }}>

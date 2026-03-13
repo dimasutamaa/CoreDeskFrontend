@@ -7,11 +7,12 @@ import Login from "../pages/Login";
 import CreateTicket from "../pages/user/CreateTicket";
 import TicketList from "../components/TicketList";
 import TicketDetail from "../components/TicketDetail";
+import AgentDashboard from "../pages/agent/AgentDashboard";
 
 export default function AppRoutes() {
     const { user } = useAuth();
 
-    const homePage = user?.role === "ADMIN" ? "/admin" : "/dashboard";
+    const homePage = user?.role === "ADMIN" ? "/admin" : user?.role === "AGENT" ? "/agent" : "/dashboard";
 
     return (
         <Routes>
@@ -41,6 +42,19 @@ export default function AppRoutes() {
                     <DashboardLayout role="ADMIN" pageTitle="Overview" />
                 }>
                 <Route index element={<AdminDashboard />} />
+                <Route path="tickets" element={<TicketList />} />
+                <Route path="tickets/:id" element={<TicketDetail />} />
+            </Route>
+            
+            {/* Agent routes */}
+            <Route
+                path="/agent"
+                element={
+                    !user ? <Navigate to="/login" /> :
+                    user.role !== "AGENT" ? <Navigate to={homePage} /> :
+                    <DashboardLayout role="AGENT" pageTitle="Overview" />
+                }>
+                <Route index element={<AgentDashboard />} />
                 <Route path="tickets" element={<TicketList />} />
                 <Route path="tickets/:id" element={<TicketDetail />} />
             </Route>

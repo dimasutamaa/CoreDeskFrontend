@@ -177,8 +177,8 @@ export default function TicketList() {
 
                 button.onclick = () => {
                     const basePath = user.role === "ADMIN"
-                        ? "/admin/tickets"
-                        : "/dashboard/tickets";
+                        ? "/admin/tickets" : user.role === "AGENT" 
+                        ? "/agent/tickets" : "/dashboard/tickets";
 
                     navigate(`${basePath}/${cellData}`);
                 }

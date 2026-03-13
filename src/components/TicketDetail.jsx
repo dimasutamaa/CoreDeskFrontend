@@ -81,6 +81,7 @@ export default function TicketDetail() {
     const [updating, setUpdating] = useState(false);
 
     const isAdmin = user?.role === "ADMIN";
+    const isAgent = user?.role === "AGENT";
 
     useEffect(() => {
         api.get(`/tickets/${id}`)
@@ -125,7 +126,7 @@ export default function TicketDetail() {
     const handleUpdate = async (e) => {
         e.preventDefault();
         
-        if (!assignedTo) {
+        if (!assignedTo && isAdmin) {
             Swal.fire({
                 icon: "warning",
                 title: "Select an agent first",
@@ -137,9 +138,13 @@ export default function TicketDetail() {
         setUpdating(true);
 
         try {
-            await api.put(`/tickets/${id}/process?role=` + user.role, {
-                assignedTo: assignedTo,
-            });
+            const payload = {};
+
+            if (isAdmin) {
+                payload.assignedTo = assignedTo;
+            }
+
+            await api.put(`/tickets/${id}/process?role=` + user.role, payload);
 
             await Swal.fire({
                 icon: "success",
@@ -330,11 +335,11 @@ export default function TicketDetail() {
                             </div>
                         )}
 
-                        {isAdmin && (
+                        {isAdmin || isAgent && (
                             <form onSubmit={handleUpdate}>
                                 <button type="submit" className="btn btn-dark w-100"
                                     style={{ borderRadius: 2, fontSize: 13, letterSpacing: ".06em", textTransform: "uppercase" }}
-                                    disabled={updating || status === "IN_PROGRESS" || status === "ASSIGNED"}>
+                                    disabled={isAdmin ? updating || status === "IN_PROGRESS" || status === "ASSIGNED" : updating}>
                                     {updating && <span className="spinner-border spinner-border-sm me-2" />}
                                     {updating ? "Processing..." : "Process"}
                                 </button>
