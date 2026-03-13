@@ -76,6 +76,7 @@ export default function TicketDetail() {
     const [agents, setAgents] = useState(null);
 
     const [assignedTo, setAssignedTo] = useState("");
+    const [status, setStatus] = useState("");
     const [updating, setUpdating] = useState(false);
 
     const isAdmin = user?.role === "ADMIN";
@@ -84,9 +85,10 @@ export default function TicketDetail() {
         api.get(`/tickets/${id}`)
             .then(response => {
                 const data = response.data.data;
-                setTicket(data.ticket);
+                const ticket = data.ticket; 
+                setTicket(ticket);
                 setLogs(data.logHistories);
-                setAssignedTo(data.assignedTo?.id ?? "");
+                setStatus(ticket.status);
             })
             .catch(error => {
                 Swal.fire({
@@ -121,11 +123,21 @@ export default function TicketDetail() {
 
     const handleUpdate = async (e) => {
         e.preventDefault();
+        
+        if (!assignedTo) {
+            Swal.fire({
+                icon: "warning",
+                title: "Select an agent first",
+                confirmButtonColor: "#111",
+            });
+            return;
+        }
+
         setUpdating(true);
 
         try {
-            await api.put(`/tickets/${id}`, {
-                assignedTo: assignedTo ? Number(assignedTo) : null,
+            await api.put(`/tickets/${id}/process?role=` + user.role, {
+                assignedTo: assignedTo,
             });
 
             await Swal.fire({
@@ -138,10 +150,10 @@ export default function TicketDetail() {
 
             const response = await api.get(`/tickets/${id}`);
             const data = response.data.data;
-            setTicket(data);
-            setStatus(data.status);
-            setAssignedTo(data.assignedTo?.id ?? "");
-            setLogs([]);
+            const ticket = data.ticket; 
+            setTicket(ticket);
+            setLogs(data.logHistories);
+            setStatus(ticket.status);
         } catch (error) {
             Swal.fire({
                 icon: "error",
@@ -149,6 +161,10 @@ export default function TicketDetail() {
                 text: error?.response?.data?.message || "Failed to update ticket. Please try again.",
                 confirmButtonColor: "#111",
                 confirmButtonText: "OK",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
             });
             console.error(error);
         } finally {
@@ -321,7 +337,7 @@ export default function TicketDetail() {
                             <form onSubmit={handleUpdate}>
                                 <button type="submit" className="btn btn-dark w-100"
                                     style={{ borderRadius: 2, fontSize: 13, letterSpacing: ".06em", textTransform: "uppercase" }}
-                                    disabled={updating}>
+                                    disabled={updating || status === "IN_PROGRESS" || status === "ASSIGNED"}>
                                     {updating && <span className="spinner-border spinner-border-sm me-2" />}
                                     {updating ? "Processing..." : "Process"}
                                 </button>

@@ -5,6 +5,12 @@ export const STATUS_STYLES = {
         bg: "#edf7f1",
         border: "#b6dfc8"
     },
+    ASSIGNED: {
+        label: "Assigned",
+        color: "#6b2d7a",
+        bg: "#f5edf7",
+        border: "#d4b6df"
+    },
     IN_PROGRESS: {
         label: "In Progress",
         color: "#7a5c2d",
@@ -23,7 +29,7 @@ export const STATUS_STYLES = {
         bg: "#f8f8f6",
         border: "#e2e2de"
     }
-}
+};
 
 export const PRIORITY_STYLES = {
     LOW: {

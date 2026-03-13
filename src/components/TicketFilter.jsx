@@ -15,6 +15,7 @@ const EMPTY_FILTERS = {
 
 const displayStatus = {
     OPEN: "OPEN",
+    ASSIGNED: "ASSIGNED",
     IN_PROGRESS: "IN PROGRESS",
     RESOLVED: "RESOLVED",
     CLOSED: "CLOSED",

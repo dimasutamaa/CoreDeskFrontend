@@ -86,39 +86,6 @@ export default function TicketList() {
         }
     };
 
-    const handleProcess = async (ticketId) => {
-        try {
-            const userRole = user.role;
-            const response = await api.get(`/tickets/${ticketId}/checkUser?role=` + userRole);
-            
-            const isValid = response.data.data;
-            if (isValid) {
-                const basePath = userRole === "ADMIN"
-                    ? "/admin/tickets"
-                    : "/dashboard/tickets";
-
-                navigate(`${basePath}/${ticketId}`);
-            } else {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Cannot process ticket",
-                    text: "You have unassigned ticket that are still in progress.",
-                    confirmButtonColor: "#111",
-                    confirmButtonText: "OK",
-                })
-            }
-        } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Something went wrong",
-                text: "Failed to load tickets. Please try again later.",
-                confirmButtonColor: "#111",
-                confirmButtonText: "OK",
-            });
-            console.error("Error fetching ticket data:", error);
-        }
-    };
-
     useEffect(() => {
         fetchTickets(EMPTY_FILTERS);
     }, []);
@@ -208,22 +175,12 @@ export default function TicketList() {
                 button.className = "btn btn-dark btn-sm process-btn";
                 button.textContent = "Process";
 
-                button.onclick = async () => {
-                    const buttons = document.querySelectorAll(".process-btn");
+                button.onclick = () => {
+                    const basePath = user.role === "ADMIN"
+                        ? "/admin/tickets"
+                        : "/dashboard/tickets";
 
-                    buttons.forEach(btn => btn.disabled = true);
-
-                    button.innerHTML = `
-                        <span class="spinner-border spinner-border-sm align-middle"></span>
-                        Process
-                    `;
-
-                    await handleProcess(cellData);
-
-                    buttons.forEach(btn => {
-                        btn.disabled = false;
-                        btn.innerHTML = "Process";
-                    });
+                    navigate(`${basePath}/${cellData}`);
                 }
 
                 td.innerHTML = "";
