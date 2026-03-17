@@ -4,13 +4,9 @@ import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import api from "../api/api";
 import { PRIORITY_STYLES, STATUS_STYLES } from "../utils/CommonUtil";
-import DataTable from 'datatables.net-react';
-import DT from 'datatables.net-bs5';
-import "../styles/Datatable.css";
-import { createRoot } from "react-dom/client";
 import LoadingSpinner from "./LoadingSpinner";
-
-DataTable.use(DT);
+import LogHistory from "./LogHistory";
+import Badge from "./Badge";
 
 const labelStyle = {
     fontSize: 12,
@@ -21,51 +17,13 @@ const labelStyle = {
     display: "block",
 };
 
-const thStyle = {
-    fontSize: 13,
-    letterSpacing: ".08em",
-    textTransform: "uppercase",
-    color: "#8a8880",
-    fontWeight: 400,
-    borderBottom: "1px solid #e2e2de",
-    paddingBottom: 12,
-};
+const StatusBadge = ({ status }) => (
+    <Badge value={status} stylesMap={STATUS_STYLES} />
+);
 
-function StatusBadge({ status }) {
-    const s = STATUS_STYLES[status] ?? { label: status, color: "#8a8880", bg: "#f8f8f6", border: "#e2e2de" };
-    return (
-        <span style={{
-            fontSize: 12,
-            letterSpacing: ".06em",
-            textTransform: "uppercase",
-            color: s.color,
-            background: s.bg,
-            border: `1px solid ${s.border}`,
-            borderRadius: 2,
-            padding: "3px 10px",
-        }}>
-            {s.label}
-        </span>
-    );
-}
-
-function PriorityBadge({ priority }) {
-    const p = PRIORITY_STYLES[priority] ?? { label: priority, color: "#8a8880", bg: "#f8f8f6", border: "#e2e2de" };
-    return (
-        <span style={{
-            fontSize: 12,
-            letterSpacing: ".06em",
-            textTransform: "uppercase",
-            color: p.color,
-            background: p.bg,
-            border: `1px solid ${p.border}`,
-            borderRadius: 2,
-            padding: "3px 10px",
-        }}>
-            {p.label}
-        </span>
-    );
-}
+const PriorityBadge = ({ priority }) => (
+    <Badge value={priority} stylesMap={PRIORITY_STYLES} />
+);
 
 export default function TicketDetail() {
     const { id } = useParams();
@@ -180,52 +138,6 @@ export default function TicketDetail() {
         }
     };
 
-    const options = {
-        ordering: false,
-        layout: {
-            topStart: null,
-            topEnd: null,
-            bottomStart: null,
-            bottomEnd: null
-        },
-        language: {
-            emptyTable: "No logs yet."
-        }
-    };
-
-    const columns = [
-        {
-            data: null,
-            className: "text-center",
-            sortable: false,
-            render: (data, type, row, meta) =>
-                `<span style="color: #8a8880; font-size: 16px;">${meta.row + meta.settings._iDisplayStart + 1}</span>`,
-        },
-        {
-            data: "createdAt",
-            width: "20%",
-            render: (data) => {
-                const date = new Date(data);
-                return `<span style="color: #8a8880; font-size: 16px;">${date.toLocaleString("en-GB")}</span>`;
-            }
-        },
-        {
-            data: "createdBy",
-            render: (data) => `<span style="font-weight: 500; color: #111; font-size: 16px;">${data}</span>`,
-        },
-        {
-            data: "status",
-            createdCell: (td, cellData) => {
-                const root = createRoot(td);
-                root.render(<StatusBadge status={cellData} />);
-            }
-        },
-        {
-            data: "description",
-            render: (data) => `<span style="font-weight: 500; color: #111; font-size: 16px;">${data}</span>`,
-        }
-    ];
-
     if (!ticket) {
         return <LoadingSpinner />
     }
@@ -260,24 +172,7 @@ export default function TicketDetail() {
                         </p>
                     </div>
 
-                    <div className="card p-4">
-                        <p style={{ fontSize: 12, letterSpacing: ".08em", textTransform: "uppercase", color: "#8a8880", margin: 0 }}>
-                            Log history
-                        </p>
-
-                        <DataTable className="table" style={{ fontSize: 14 }} data={logs} options={options} columns={columns}>
-                            <thead>
-                                <tr>
-                                    <th style={thStyle}>#</th>
-                                    <th style={thStyle}>Timestamp</th>
-                                    <th style={thStyle}>User</th>
-                                    <th style={thStyle}>Status</th>
-                                    <th style={thStyle}>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody className="align-middle"></tbody>
-                        </DataTable>
-                    </div>
+                    <LogHistory logs={logs} />
                 </div>
 
                 <div className="col-12 col-lg-4">
