@@ -83,8 +83,10 @@ export default function TicketDetail() {
     const isAdmin = user?.role === "ADMIN";
     const isAgent = user?.role === "AGENT";
 
+    const getTicketEndpoint = isAgent ? `/tickets/${id}?role=AGENT` : `/tickets/${id}`;
+
     useEffect(() => {
-        api.get(`/tickets/${id}`)
+        api.get(getTicketEndpoint)
             .then(response => {
                 const data = response.data.data;
                 const ticket = data.ticket; 
@@ -154,7 +156,7 @@ export default function TicketDetail() {
                 confirmButtonText: "OK",
             });
 
-            const response = await api.get(`/tickets/${id}`);
+            const response = await api.get(getTicketEndpoint);
             const data = response.data.data;
             const ticket = data.ticket; 
             setTicket(ticket);
@@ -335,7 +337,7 @@ export default function TicketDetail() {
                             </div>
                         )}
 
-                        {isAdmin || isAgent && (
+                        {(isAdmin || isAgent) && (
                             <form onSubmit={handleUpdate}>
                                 <button type="submit" className="btn btn-dark w-100"
                                     style={{ borderRadius: 2, fontSize: 13, letterSpacing: ".06em", textTransform: "uppercase" }}
