@@ -53,16 +53,22 @@ export default function TicketDetail() {
                 setStatus(ticket.status);
             })
             .catch(error => {
+                const response = error.response;
+                let errorMsg = null;
+                
+                if (response.status === 403) {
+                    errorMsg = response.data?.message;
+                }
+
                 Swal.fire({
                     icon: "error",
                     title: "Something went wrong",
-                    text: "Failed to load ticket. Please try again later.",
+                    text: errorMsg ?? "Failed to load ticket. Please try again later.",
                     confirmButtonColor: "#111",
                     confirmButtonText: "OK",
                 }).then(result => {
                     if (result.isConfirmed) navigate(-1);
                 });
-                console.error(error);
             });
     }, []);
 
@@ -192,6 +198,13 @@ export default function TicketDetail() {
                         </div>
 
                         <div className="mb-4">
+                            <label style={labelStyle}>SLA</label>
+                            <p style={{ fontSize: 15, color: "#8a8880", margin: 0 }}>
+                                {new Date(ticket.slaDate).toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" })}
+                            </p>
+                        </div>
+
+                        <div className="mb-4">
                             <label style={labelStyle}>Created by</label>
                             <p style={{ fontSize: 15, color: "#111", margin: 0 }}>
                                 {ticket.createdBy?.displayName ?? "-"}
@@ -218,7 +231,7 @@ export default function TicketDetail() {
 
                         <div className="mb-4">
                             <label style={labelStyle}>Created</label>
-                            <p style={{ fontSize: 14, color: "#8a8880", margin: 0 }}>
+                            <p style={{ fontSize: 15, color: "#8a8880", margin: 0 }}>
                                 {new Date(ticket.createdAt).toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" })}
                             </p>
                         </div>
@@ -226,7 +239,7 @@ export default function TicketDetail() {
                         {ticket.updatedAt && (
                             <div className="mb-4">
                                 <label style={labelStyle}>Last updated</label>
-                                <p style={{ fontSize: 14, color: "#8a8880", margin: 0 }}>
+                                <p style={{ fontSize: 15, color: "#8a8880", margin: 0 }}>
                                     {new Date(ticket.updatedAt).toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" })}
                                 </p>
                             </div>

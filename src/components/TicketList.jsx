@@ -137,19 +137,30 @@ export default function TicketList() {
         },
         {
             data: "title",
-            width: "18%",
+            width: "16%",
             render: (data) => `<span style="font-weight: 500; color: #111; font-size: 16px;">${data}</span>`,
         },
         {
             data: "status",
+            width: "10%",
             render: (data) => badge(STATUS_STYLES[data] ?? { label: data, color: "#8a8880", bg: "#f8f8f6", border: "#e2e2de" }),
         },
         {
             data: "priority",
+            width: "10%",
             render: (data) => badge(PRIORITY_STYLES[data] ?? { label: data, color: "#8a8880", bg: "#f8f8f6", border: "#e2e2de" }),
         },
         {
+            data: "slaDate",
+            width: "13%",
+            render: (data) => {
+                const date = new Date(data);
+                return `<span style="color: #8a8880; font-size: 16px;">${date.toLocaleString("en-GB")}</span>`;
+            }
+        },
+        {
             data: "createdBy.displayName",
+            width: "12%",
             render: (data) => `<span style="color: #8a8880; font-size: 16px;">${data ?? "-"}</span>`,
         },
         {
@@ -208,6 +219,7 @@ export default function TicketList() {
                             <th style={thStyle}>Title</th>
                             <th style={thStyle}>Status</th>
                             <th style={thStyle}>Priority</th>
+                            <th style={thStyle}>SLA</th>
                             <th style={thStyle}>Created by</th>
                             <th style={thStyle}>Created at</th>
                             <th style={thStyle}>Assigned to</th>
