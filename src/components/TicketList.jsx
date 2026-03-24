@@ -142,12 +142,12 @@ export default function TicketList() {
         },
         {
             data: "status",
-            width: "10%",
+            width: "12%",
             render: (data) => badge(STATUS_STYLES[data] ?? { label: data, color: "#8a8880", bg: "#f8f8f6", border: "#e2e2de" }),
         },
         {
             data: "priority",
-            width: "10%",
+            width: "12%",
             render: (data) => badge(PRIORITY_STYLES[data] ?? { label: data, color: "#8a8880", bg: "#f8f8f6", border: "#e2e2de" }),
         },
         {
@@ -160,7 +160,7 @@ export default function TicketList() {
         },
         {
             data: "createdBy.displayName",
-            width: "12%",
+            width: "13%",
             render: (data) => `<span style="color: #8a8880; font-size: 16px;">${data ?? "-"}</span>`,
         },
         {
@@ -184,7 +184,7 @@ export default function TicketList() {
             createdCell: (td, cellData) => {
                 const button = document.createElement("button");
                 button.className = "btn btn-dark btn-sm process-btn";
-                button.textContent = "Process";
+                button.textContent = "View";
 
                 button.onclick = () => {
                     const basePath = user.role === "ADMIN"
