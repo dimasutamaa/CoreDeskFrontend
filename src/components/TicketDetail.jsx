@@ -7,6 +7,7 @@ import { PRIORITY_STYLES, STATUS_STYLES } from "../utils/CommonUtil";
 import LoadingSpinner from "./LoadingSpinner";
 import LogHistory from "./LogHistory";
 import Badge from "./Badge";
+import TicketComments from "./TicketComments";
 
 const labelStyle = {
     fontSize: 12,
@@ -32,6 +33,7 @@ export default function TicketDetail() {
 
     const [ticket, setTicket] = useState(null);
     const [logs, setLogs] = useState([]);
+    const [comments, setComments] = useState([]);
     const [agents, setAgents] = useState(null);
 
     const [assignedTo, setAssignedTo] = useState("");
@@ -41,14 +43,15 @@ export default function TicketDetail() {
     const isAdmin = user?.role === "ADMIN";
     const isAgent = user?.role === "AGENT";
 
-    const getTicketEndpoint = isAgent ? `/tickets/${id}?role=AGENT` : `/tickets/${id}`;
+    const getTicketEndpoint = isAgent ? `/tickets/${id}?role=AGENT` : isAdmin ? `/tickets/${id}` : `/tickets/${id}?role=USER`;
 
     useEffect(() => {
         api.get(getTicketEndpoint)
             .then(response => {
                 const data = response.data.data;
-                const ticket = data.ticket; 
+                const ticket = data.ticket;
                 setTicket(ticket);
+                setComments(data.comments);
                 setLogs(data.logHistories);
                 setStatus(ticket.status);
             })
@@ -178,6 +181,7 @@ export default function TicketDetail() {
                         </p>
                     </div>
 
+                    <TicketComments ticketId={ticket.id} initialComments={comments} />
                     <LogHistory logs={logs} />
                 </div>
 
