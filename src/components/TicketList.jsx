@@ -159,7 +159,7 @@ export default function TicketList() {
             }
         },
         {
-            data: "createdBy.displayName",
+            data: "createdBy.username",
             width: "13%",
             render: (data) => `<span style="color: #8a8880; font-size: 16px;">${data ?? "-"}</span>`,
         },
@@ -171,7 +171,7 @@ export default function TicketList() {
             }
         },
         {
-            data: "assignedTo.displayName",
+            data: "assignedTo.username",
             defaultContent: `<span style="color: #c8c4be; font-size: 16px;">Unassigned</span>`,
             render: (data) => data
                 ? `<span style="color: #8a8880; font-size: 16px;">${data}</span>`

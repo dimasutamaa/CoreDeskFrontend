@@ -12,12 +12,12 @@ export default function TicketComments({ ticketId, initialComments = [] }) {
         setSubmitting(true);
 
         try {
-            await api.post(`/tickets/${ticketId}/comments`, {
+            await api.post(`/comments/${ticketId}`, {
                 message: commentInput,
             });
             setCommentInput("");
 
-            const response = await api.get(`/tickets/${ticketId}/comments`);
+            const response = await api.get(`/comments/${ticketId}`);
             setComments(response.data.data);
         } catch (error) {
             Swal.fire({
@@ -51,7 +51,7 @@ export default function TicketComments({ ticketId, initialComments = [] }) {
                             }}>
                             <div className="d-flex justify-content-between align-items-center mb-1">
                                 <span style={{ fontSize: 14, fontWeight: 500, color: "#111" }}>
-                                    {comment.user?.displayName ?? "Unknown"}
+                                    {comment.user?.username ?? "Unknown"}
                                 </span>
                                 <span style={{ fontSize: 12, color: "#8a8880" }}>
                                     {new Date(comment.createdAt).toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" })}

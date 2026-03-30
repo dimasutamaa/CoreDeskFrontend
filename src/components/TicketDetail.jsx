@@ -211,7 +211,7 @@ export default function TicketDetail() {
                         <div className="mb-4">
                             <label style={labelStyle}>Created by</label>
                             <p style={{ fontSize: 15, color: "#111", margin: 0 }}>
-                                {ticket.createdBy?.displayName ?? "-"}
+                                {ticket.createdBy?.username ?? "-"}
                             </p>
                         </div>
 
@@ -219,7 +219,7 @@ export default function TicketDetail() {
                             <label style={labelStyle}>Assigned to</label>
                             {isAdmin ? (
                                 <select className="form-control" value={assignedTo} onChange={e => setAssignedTo(e.target.value)} disabled={ticket.assignedTo}>
-                                    <option value="">{ticket.assignedTo?.displayName ?? "Select agent"}</option>
+                                    <option value="">{ticket.assignedTo?.username ?? "Select agent"}</option>
                                     {Object.entries(agents).map(([id, name]) => (
                                         <option key={id} value={id}>
                                             {name}
@@ -228,7 +228,7 @@ export default function TicketDetail() {
                                 </select>
                             ) : (
                                 <p style={{ fontSize: 15, color: ticket.assignedTo ? "#111" : "#c8c4be", margin: 0 }}>
-                                    {ticket.assignedTo?.displayName ?? "Unassigned"}
+                                    {ticket.assignedTo?.username ?? "Unassigned"}
                                 </p>
                             )}
                         </div>
