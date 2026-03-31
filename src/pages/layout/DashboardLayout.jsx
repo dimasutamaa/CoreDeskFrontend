@@ -32,13 +32,13 @@ function Sidebar({ nav, collapsed, onCollapse }) {
     return (
         <aside style={{
             width: collapsed ? 64 : 260,
-            minHeight: "100vh",
+            height: "100%",
             background: "#fff",
             borderRight: "1px solid #e2e2de",
             display: "flex",
             flexDirection: "column",
             transition: "width .2s ease",
-            overflow: "hidden",
+            overflowY: "auto",
             flexShrink: 0,
         }}>
 
@@ -174,14 +174,14 @@ export default function DashboardLayout({ role = "USER", pageTitle = "Overview" 
     const nav = role === "ADMIN" ? ADMIN_NAV : role === "AGENT" ? AGENT_NAV : USER_NAV;
 
     return (
-        <div style={{ display: "flex", minHeight: "100vh", background: "#f8f8f6" }}>
+        <div style={{ display: "flex", height: "100dvh", flexDirection: "row", overflow: "hidden", background: "#f8f8f6" }}>
             <Sidebar
                 nav={nav}
                 collapsed={collapsed}
                 onCollapse={() => setCollapsed(c => !c)}
             />
 
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
                 <Header title={pageTitle} />
                 <main style={{ flex: 1, padding: "40px 36px", overflowY: "auto" }}>
                     <Outlet />
