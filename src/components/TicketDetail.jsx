@@ -54,6 +54,7 @@ export default function TicketDetail() {
                 setComments(data.comments);
                 setLogs(data.logHistories);
                 setStatus(ticket.status);
+                setAssignedTo(ticket.assignedTo);
             })
             .catch(error => {
                 const response = error.response;
