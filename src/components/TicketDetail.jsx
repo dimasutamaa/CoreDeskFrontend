@@ -253,7 +253,6 @@ export default function TicketDetail() {
                         {(isAdmin || isAgent) && (
                             <form onSubmit={handleUpdate}>
                                 <button type="submit" className="btn btn-dark w-100"
-                                    style={{ borderRadius: 2, fontSize: 13, letterSpacing: ".06em", textTransform: "uppercase" }}
                                     disabled={isAdmin ? updating || status === "IN_PROGRESS" || status === "ASSIGNED" : updating}>
                                     {updating && <span className="spinner-border spinner-border-sm me-2" />}
                                     {updating ? "Processing..." : "Process"}

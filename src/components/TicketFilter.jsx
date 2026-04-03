@@ -202,8 +202,7 @@ export default function TicketFilter({ filters, onChange, onReset }) {
                             onMouseLeave={e => { e.currentTarget.style.borderColor = "#e2e2de"; e.currentTarget.style.color = "#8a8880"; }}>
                             Reset
                         </button>
-                        <button type="button" onClick={handleApply} className="btn btn-dark"
-                            style={{ borderRadius: 2, fontSize: 13, letterSpacing: ".06em", textTransform: "uppercase" }}>
+                        <button type="button" onClick={handleApply} className="btn btn-dark">
                             Apply
                         </button>
                     </div>

@@ -132,9 +132,7 @@ export default function TicketComments({ ticketId, initialComments = [] }) {
                         onChange={e => setCommentInput(e.target.value)} style={{ resize: "none", fontSize: 14 }} required />
                 </div>
                 <div className="d-flex justify-content-end">
-                    <button type="submit" className="btn btn-dark"
-                        style={{ borderRadius: 2, fontSize: 13, letterSpacing: ".06em", textTransform: "uppercase" }}
-                        disabled={loading}>
+                    <button type="submit" className="btn btn-dark" disabled={loading}>
                         {loading && <span className="spinner-border spinner-border-sm me-2" />}
                         {loading ? "Posting..." : "Post"}
                     </button>
