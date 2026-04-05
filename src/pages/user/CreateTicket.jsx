@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import api from "../../api/api";
 import Swal from "sweetalert2";
+import { popupMessage } from "../../components/Alert";
 
 const PRIORITY_OPTIONS = ["LOW", "MEDIUM", "HIGH"];
 
@@ -38,14 +39,7 @@ export default function CreateTicket() {
                 createdBy: user.id
             });
 
-            await Swal.fire({
-                icon: "success",
-                title: "Ticket created!",
-                text: "Your ticket has been submitted successfully.",
-                confirmButtonColor: "#111",
-            })
-
-            navigate("/dashboard");
+            popupMessage("Success", "Your ticket has been submitted successfully.", () => { navigate("/dashboard") });
         } catch (err) {
             setError(err?.response?.data?.message || "An error occurred");
         } finally {

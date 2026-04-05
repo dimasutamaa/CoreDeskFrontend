@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/api";
-import Swal from "sweetalert2";
+import { popupMessage } from "./Alert";
 
 const EMPTY_FILTERS = {
     search: "",
@@ -40,14 +40,7 @@ export default function TicketFilter({ filters, onChange, onReset }) {
         api.get("/tickets/filters")
             .then(response => setFilters(response.data.data))
             .catch(error => {
-                Swal.fire({
-                    icon: "error",
-                    title: "Something went wrong",
-                    text: "Failed to load filters. Please try again later.",
-                    confirmButtonColor: "#111",
-                    confirmButtonText: "OK",
-                });
-                console.error("Error fetching filter data:", error);
+                popupMessage("Error", "Failed to load filters. Please try again later.");
             });
     }, []);
 

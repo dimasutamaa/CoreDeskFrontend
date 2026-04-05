@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-import Swal from "sweetalert2";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import api from "../api/api";
@@ -8,6 +7,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import LogHistory from "./LogHistory";
 import Badge from "./Badge";
 import TicketComments from "./TicketComments";
+import { popupConfirm, popupMessage } from "./Alert";
 
 const labelStyle = {
     fontSize: 12,
@@ -50,6 +50,7 @@ export default function TicketDetail() {
             .then(response => {
                 const data = response.data.data;
                 const ticket = data.ticket;
+
                 setTicket(ticket);
                 setComments(data.comments);
                 setLogs(data.logHistories);
@@ -58,55 +59,28 @@ export default function TicketDetail() {
             })
             .catch(error => {
                 const response = error.response;
-                let errorMsg = null;
+                let errorMsg = "Failed to load ticket. Please try again later.";
                 
-                if (response.status === 403) {
+                if (response?.status === 403) {
                     errorMsg = response.data?.message;
                 }
 
-                Swal.fire({
-                    icon: "error",
-                    title: "Something went wrong",
-                    text: errorMsg ?? "Failed to load ticket. Please try again later.",
-                    confirmButtonColor: "#111",
-                    confirmButtonText: "OK",
-                }).then(result => {
-                    if (result.isConfirmed) navigate(-1);
-                });
-            });
+                popupMessage("Error", errorMsg, () => { navigate(-1) });
+            })
     }, []);
 
     useEffect(() => {
-        if (isAdmin) {
-            api.get("/users?role=AGENT")
-                .then(response => setAgents(response.data.data))
-                .catch(error => {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Something went wrong",
-                        text: "Failed to load agent list. Please try again later.",
-                        confirmButtonColor: "#111",
-                        confirmButtonText: "OK",
-                    });
-                    console.error(error);
-                });
-        }
+        if (!isAdmin) return;
+
+        api.get("/users?role=AGENT")
+            .then(response => setAgents(response.data.data))
+            .catch(error => {
+                popupMessage("Error", "Failed to load agent list. Please try again later.");
+            })
     }, []);
 
-    const handleUpdate = async (e) => {
-        e.preventDefault();
-        
-        if (!assignedTo && isAdmin) {
-            Swal.fire({
-                icon: "warning",
-                title: "Select an agent first",
-                confirmButtonColor: "#111",
-            });
-            return;
-        }
-
+    const processTicket = async () => {
         setUpdating(true);
-
         try {
             const payload = {};
 
@@ -116,36 +90,29 @@ export default function TicketDetail() {
 
             await api.put(`/tickets/${id}/process?role=` + user.role, payload);
 
-            await Swal.fire({
-                icon: "success",
-                title: "Ticket updated",
-                text: "Changes have been submitted successfully.",
-                confirmButtonColor: "#111",
-                confirmButtonText: "OK",
-            });
-
-            const response = await api.get(getTicketEndpoint);
-            const data = response.data.data;
-            const ticket = data.ticket; 
-            setTicket(ticket);
-            setLogs(data.logHistories);
-            setStatus(ticket.status);
+            popupMessage("Success", "Ticket has been processed successfully.", () => { navigate(-1) });
         } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Update failed",
-                text: error?.response?.data?.message || "Failed to update ticket. Please try again.",
-                confirmButtonColor: "#111",
-                confirmButtonText: "OK",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    location.reload();
-                }
-            });
-            console.error(error);
+            let errorMsg = "Failed to update ticket. Please try again later.";
+            
+            if (error.response) {
+                errorMsg = error.response.data?.message || errorMsg;
+            }
+
+            popupMessage("Error", errorMsg);
         } finally {
             setUpdating(false);
         }
+    };
+
+    const handleUpdate = (e) => {
+        e.preventDefault();
+        
+        if (!assignedTo && isAdmin) {
+            popupMessage("Warning", "You must select an agent to process this ticket.");
+            return;
+        }
+
+        popupConfirm("Confirm Process", "Are you sure you want to process this ticket?", processTicket());
     };
 
     if (!ticket) {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import api from "../api/api";
-import Swal from "sweetalert2";
 import { useAuth } from "../context/AuthContext";
+import { popupMessage } from "./Alert";
 
 export default function TicketComments({ ticketId, initialComments = [] }) {
     const [comments, setComments] = useState(initialComments);
@@ -26,14 +26,7 @@ export default function TicketComments({ ticketId, initialComments = [] }) {
             const response = await api.get(`/comments/${ticketId}`);
             setComments(response.data.data);
         } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Failed to post comment",
-                text: error?.response?.data?.message || "Please try again.",
-                confirmButtonColor: "#111",
-                confirmButtonText: "OK",
-            });
-            console.error(error);
+            popupMessage("Error", "Failed to post comment. Please try again later.");
         } finally {
             setLoading(false);
         }
@@ -47,14 +40,7 @@ export default function TicketComments({ ticketId, initialComments = [] }) {
             const response = await api.get(`/comments/${ticketId}`);
             setComments(response.data.data);
         } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Failed to delete comment",
-                text: error?.response?.data?.message || "Please try again.",
-                confirmButtonColor: "#111",
-                confirmButtonText: "OK",
-            });
-            console.error(error);
+            popupMessage("Error", "Failed to delete comment. Please try again later.");
         } finally {
             setLoading(false);
         }

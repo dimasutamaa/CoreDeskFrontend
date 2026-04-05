@@ -8,6 +8,7 @@ import TicketFilter from './TicketFilter';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { PRIORITY_STYLES, STATUS_STYLES } from '../utils/CommonUtil';
+import { popupMessage } from './Alert';
 
 DataTable.use(DT);
 
@@ -73,14 +74,7 @@ export default function TicketList() {
             const response = await api.get("/tickets", { params });
             setTickets(response.data.data);
         } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Something went wrong",
-                text: "Failed to load tickets. Please try again later.",
-                confirmButtonColor: "#111",
-                confirmButtonText: "OK",
-            });
-            console.error("Error fetching ticket data:", error);
+            popupMessage("Error", "Failed to load tickets. Please try again later.");
         } finally {
             setLoading(false);
         }

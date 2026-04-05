@@ -1,0 +1,10 @@
+.swal2-title, .swal2-html-container {
+    text-align: left !important;
+}
+
+.swal2-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end !important;
+    padding-right: 20px;
+}

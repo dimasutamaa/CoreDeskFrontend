@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import api from "./api";
-import Swal from "sweetalert2";
+import { popupMessage } from "../components/Alert";
 
 export const getTicketRecap = (role) => {
     const [recap, setRecap] = useState(null);
@@ -12,13 +12,7 @@ export const getTicketRecap = (role) => {
         api.get("/users/recap?role=" + role)
             .then(response => setRecap(response.data.data))
             .catch(error => {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "Failed to fetch recap data. Please try again later.",
-                    confirmButtonColor: "#111"
-                });
-                console.error("Error fetching recap data: ", error);
+                popupMessage("Error", "Failed to fetch recap data. Please try again later.");
             })
             .finally(() => {
                 if (isMounted) setLoading(false);
