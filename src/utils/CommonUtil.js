@@ -17,6 +17,18 @@ export const STATUS_STYLES = {
         bg: "#fdf6ed",
         border: "#dfd0b6"
     },
+    CONFIRMATION: {
+        label: "Confirmation",
+        color: "#854F0B",
+        bg: "#FAEEDA",
+        border: "#FAC775"
+    },
+    REOPENED: {
+        label: "Reopened",
+        color: "#993C1D",
+        bg: "#FAECE7",
+        border: "#F5C4B3"
+    },
     RESOLVED: {
         label: "Resolved",
         color: "#2d4f7a",
