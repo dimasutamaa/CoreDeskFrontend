@@ -8,6 +8,7 @@ import LogHistory from "./LogHistory";
 import Badge from "./Badge";
 import TicketComments from "./TicketComments";
 import { popupConfirm, popupMessage } from "./Alert";
+import Swal from "sweetalert2";
 
 const labelStyle = {
     fontSize: 12,
@@ -78,7 +79,7 @@ export default function TicketDetail() {
             })
     }, []);
 
-    const processTicket = async (action) => {
+    const processTicket = async (action, notes) => {
         setUpdating(true);
         try {
             const payload = {};
@@ -88,6 +89,8 @@ export default function TicketDetail() {
                 payload.status = status;
             } else if (isAgent) {
                 payload.status = status;
+            } else {
+                payload.notes = notes;
             }
 
             if (action === "REJECT") {
@@ -123,7 +126,25 @@ export default function TicketDetail() {
 
     const handleReject = (e) => {
         e.preventDefault();
-        popupConfirm("Confirm Reject", "Are you sure you want to reopened the fix?", () => { processTicket("REJECT") });
+
+        Swal.fire({
+            title: 'Rejection notes',
+            input: 'text',
+            inputValidator: (value) => {
+                if (!value) {
+                return 'This field is required!';
+                }
+            },
+            showCancelButton: true,
+            confirmButtonColor: "#111",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                popupConfirm("Confirm Reject", "Are you sure you want to re-open this ticket?", () => { processTicket("REJECT", result.value) });
+            }
+        });
     }
 
     const isProcessBtnDisabled = () => {
