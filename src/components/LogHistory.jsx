@@ -28,8 +28,16 @@ export default function LogHistory({ logs }) {
             topStart: null,
             topEnd: null,
             bottomStart: null,
-            bottomEnd: null
+            bottomEnd: {
+                pageLength: {
+                    text: "Items per page &nbsp _MENU_"
+                },
+                paging: {
+                    buttons: 3
+                }
+            }
         },
+        lengthMenu: [10, 15, 20],
         language: {
             emptyTable: "No logs yet."
         }
@@ -37,15 +45,7 @@ export default function LogHistory({ logs }) {
 
     const columns = [
         {
-            data: null,
-            className: "text-center",
-            sortable: false,
-            render: (data, type, row, meta) =>
-                `<span style="color: #8a8880; font-size: 16px;">${meta.row + meta.settings._iDisplayStart + 1}</span>`,
-        },
-        {
             data: "createdAt",
-            width: "20%",
             render: (data) => {
                 const date = new Date(data);
                 return `<span style="color: #8a8880; font-size: 16px;">${date.toLocaleString("en-GB")}</span>`;
@@ -77,7 +77,6 @@ export default function LogHistory({ logs }) {
             <DataTable className="table" style={{ fontSize: 14 }} data={logs} options={options} columns={columns}>
                 <thead>
                     <tr>
-                        <th style={thStyle}>#</th>
                         <th style={thStyle}>Timestamp</th>
                         <th style={thStyle}>User</th>
                         <th style={thStyle}>Status</th>
