@@ -9,7 +9,7 @@ export const getTicketRecap = (role) => {
     useEffect(() => {
         let isMounted = true;
         
-        api.get("/users/recap?role=" + role)
+        api.get("/users/recap")
             .then(response => setRecap(response.data.data))
             .catch(error => {
                 popupMessage("Error", "Failed to fetch recap data. Please try again later.");

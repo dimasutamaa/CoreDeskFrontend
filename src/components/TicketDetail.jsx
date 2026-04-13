@@ -39,16 +39,13 @@ export default function TicketDetail() {
     const [assignedTo, setAssignedTo] = useState("");
     const [status, setStatus] = useState("");
     const [updating, setUpdating] = useState(false);
-    const [action, setAction] = useState("");
 
     const isAdmin = user?.role === "ADMIN";
     const isAgent = user?.role === "AGENT";
     const isUser = user?.role === "USER";
 
-    const getTicketEndpoint = isAgent ? `/tickets/${id}?role=AGENT` : isAdmin ? `/tickets/${id}` : `/tickets/${id}?role=USER`;
-
     useEffect(() => {
-        api.get(getTicketEndpoint)
+        api.get(`/tickets/${id}`)
             .then(response => {
                 const data = response.data.data;
                 const ticket = data.ticket;
@@ -81,7 +78,7 @@ export default function TicketDetail() {
             })
     }, []);
 
-    const processTicket = async () => {
+    const processTicket = async (action) => {
         setUpdating(true);
         try {
             const payload = {};
@@ -91,11 +88,13 @@ export default function TicketDetail() {
                 payload.status = status;
             } else if (isAgent) {
                 payload.status = status;
-            } else {
-                payload.action = action;
             }
 
-            await api.put(`/tickets/${id}/process?role=` + user.role, payload);
+            if (action === "REJECT") {
+                await api.put(`/tickets/${id}/process?action=REJECT`, payload)
+            } else {
+                await api.put(`/tickets/${id}/process`, payload);
+            }
 
             popupMessage("Success", "Ticket has been processed successfully.", () => { navigate(-1) });
         } catch (error) {
@@ -121,6 +120,11 @@ export default function TicketDetail() {
 
         popupConfirm("Confirm Process", "Are you sure you want to process this ticket?", () => { processTicket() });
     };
+
+    const handleReject = (e) => {
+        e.preventDefault();
+        popupConfirm("Confirm Reject", "Are you sure you want to reopened the fix?", () => { processTicket("REJECT") });
+    }
 
     const isProcessBtnDisabled = () => {
         if (updating) return true;
@@ -239,8 +243,8 @@ export default function TicketDetail() {
 
                         <div className="d-flex gap-2">
                             {(isUser && (status === "CONFIRMATION" || status === "REOPENED")) && (
-                                <form onSubmit={handleProcess} className="flex-fill">
-                                    <button type="submit" className="btn btn-dark w-100" disabled={isProcessBtnDisabled()} onClick={() => setAction("REJECT")}>
+                                <form onSubmit={handleReject} className="flex-fill">
+                                    <button type="submit" className="btn btn-dark w-100" disabled={isProcessBtnDisabled()}>
                                         {updating && <span className="spinner-border spinner-border-sm me-2" />}
                                         {updating ? "Processing..." : "Reject"}
                                     </button>
