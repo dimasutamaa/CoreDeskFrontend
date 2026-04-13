@@ -119,7 +119,7 @@ export default function TicketDetail() {
             return;
         }
 
-        popupConfirm("Confirm Process", "Are you sure you want to process this ticket?", processTicket());
+        popupConfirm("Confirm Process", "Are you sure you want to process this ticket?", () => { processTicket() });
     };
 
     const isProcessBtnDisabled = () => {
