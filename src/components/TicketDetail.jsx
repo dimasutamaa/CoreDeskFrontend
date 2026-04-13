@@ -55,7 +55,7 @@ export default function TicketDetail() {
                 setComments(data.comments);
                 setLogs(data.logHistories);
                 setStatus(ticket.status);
-                setAssignedTo(ticket.assignedTo);
+                setAssignedTo(ticket.assignedTo?.id);
             })
             .catch(error => {
                 const response = error.response;
@@ -231,8 +231,10 @@ export default function TicketDetail() {
                         <div className="mb-4">
                             <label style={labelStyle}>Assigned to</label>
                             {isAdmin ? (
-                                <select className="form-control" value={assignedTo} onChange={e => setAssignedTo(e.target.value)} disabled={ticket.assignedTo && status !== "REOPENED"}>
-                                    <option value="">{ticket.assignedTo?.username ?? "Select agent"}</option>
+                                <select className="form-control" value={assignedTo} onChange={e => setAssignedTo(e.target.value)} 
+                                    disabled={ticket.assignedTo && status !== "REOPENED"}
+                                >
+                                    <option value="">Select agent</option>
                                     {Object.entries(agents).map(([id, name]) => (
                                         <option key={id} value={id}>
                                             {name}
