@@ -1,13 +1,14 @@
-import { getTicketRecap } from "../../api/getTicketRecap";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import { getTicketRecap } from "../api/getTicketRecap";
+import LoadingSpinner from "../components/LoadingSpinner";
 
-export default function UserDashboard() {
-    const { recap, loading } = getTicketRecap("USER");
+export default function AgentDashboard() {
+    const { recap, loading } = getTicketRecap("AGENT");
 
     const ticketRecap = [
-        { label: "My Tickets", value: recap?.open || "0" },
-        { label: "Closed Tickets", value: recap?.closed || "0" },
-    ];
+        { label: "Assigned", value: recap?.assigned || "0" },
+        { label: "In Progress", value: recap?.inProgress || "0" },
+        { label: "Resolved", value: recap?.resolved || "0" },
+    ]
 
     if (loading) {
         return <LoadingSpinner /> 
@@ -20,11 +21,11 @@ export default function UserDashboard() {
             </p>
             {/* Ticket recap cards */}
             <div className="row g-4 mb-4">
-                {ticketRecap.map(({ label, value }) => (
+                {ticketRecap.map(({ label, value, sub }) => (
                     <div className="col-12 col-sm-4" key={label}>
                         <div
                             className="card p-4"
-                            style={{ transition: "border-color .15s", cursor: "default" }}
+                            style={{ transition: "border-color .15s" }}
                             onMouseEnter={e => e.currentTarget.style.borderColor = "#111"}
                             onMouseLeave={e => e.currentTarget.style.borderColor = "#e2e2de"}
                         >
@@ -40,4 +41,4 @@ export default function UserDashboard() {
             </div>
         </div>
     )
-}
+};

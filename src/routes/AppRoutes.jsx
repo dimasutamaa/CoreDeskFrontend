@@ -1,13 +1,13 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import UserDashboard from "../pages/user/UserDashboard";
-import AdminDashboard from "../pages/admin/AdminDashboard";
-import DashboardLayout from "../pages/layout/DashboardLayout";
+import UserDashboard from "../pages/UserDashboard";
+import AdminDashboard from "../pages/AdminDashboard";
+import DashboardLayout from "../pages/DashboardLayout";
 import Login from "../pages/Login";
-import CreateTicket from "../pages/user/CreateTicket";
+import CreateTicket from "../pages/CreateTicket";
 import TicketList from "../components/TicketList";
 import TicketDetail from "../components/TicketDetail";
-import AgentDashboard from "../pages/agent/AgentDashboard";
+import AgentDashboard from "../pages/AgentDashboard";
 
 export default function AppRoutes() {
     const { user } = useAuth();

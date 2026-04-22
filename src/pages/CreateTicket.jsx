@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
-import api from "../../api/api";
+import api from "../api/api";
 import Swal from "sweetalert2";
-import { popupMessage } from "../../components/Alert";
+import { popupMessage } from "../components/Alert";
 
 const PRIORITY_OPTIONS = ["LOW", "MEDIUM", "HIGH"];
 
