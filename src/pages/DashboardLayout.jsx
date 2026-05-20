@@ -5,6 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "datatables.net-bs5/css/dataTables.bootstrap5.min.css";
 import "../styles/Common.css";
+import api from "../api/api";
+import { popupMessage } from "../components/Alert";
 
 const USER_NAV = [
     { label: "Overview",  to: "/dashboard" },
@@ -27,7 +29,15 @@ function Sidebar({ nav, collapsed, onCollapse }) {
     const { logout } = useAuth();
     const navigate = useNavigate();
 
-    const handleLogout = () => { logout(); navigate("/login"); };
+    const handleLogout = async () => {
+        try {
+            await api.post("/auth/logout");
+            logout(); 
+            navigate("/login");
+        } catch (error) {
+            popupMessage("Error", "An error occured.");
+        }
+    };
 
     return (
         <aside style={{

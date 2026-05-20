@@ -14,4 +14,13 @@ api.interceptors.request.use((config) => {
     return config
 })
 
+api.interceptors.response.use((response) => response, (error) => {
+    if (error.response?.status === 401 && window.location.pathname !== "/login") {
+        window.dispatchEvent(new Event("unauthorized"));
+        return new Promise(() => {});
+    }
+
+    return Promise.reject(error);
+})
+
 export default api;
